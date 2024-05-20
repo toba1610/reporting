@@ -201,4 +201,4 @@ def fill_Word_report(report_json):
     print("Fertig")
 
 init_logger()
-print(check_filename('test.doc')) 
+print(check_filename('test.xls')) 
