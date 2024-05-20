@@ -16,6 +16,20 @@ def init_logger():
 
 def check_filename(filename:str) -> str:
 
+    '''
+    Checks the given filename for the following parameters:
+        - length
+        - file ending
+
+    Outputs a 'error' if anything is wrong
+        
+    Input:
+        - filename: str = The name of the template to use
+
+    Output:
+        - str = 'error' if anything goes wrong, or the name of the file
+    '''
+
     if '.' in filename:
         temp = []
         temp = filename.split('.')
