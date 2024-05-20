@@ -43,6 +43,8 @@ def open_word_document(filename: str) -> None:
         - None 
     '''
 
+    logger.info('Started generating new protocol')
+
     path = os.path.abspath(f".\\Reports\\{filename}.docx")
 
     app = win32com.client.Dispatch("Word.Application") 
