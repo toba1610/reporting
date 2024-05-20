@@ -1,12 +1,11 @@
 import win32com
 import win32com.client
 import json
-import json_data_process as jdp
 import os
+import time
 import logging
+import threading
 from docx2pdf import convert
-
-
 
 def init_logger():
     logging.basicConfig(level=logging.DEBUG,
@@ -99,6 +98,78 @@ class create_report():
             bookmarks.append(bookmark.Name)
         
         return bookmarks
+
+    def close_application(self, reason: str):
+
+        self.doc.Close()
+        del self.doc
+
+        self.app.Quit()
+        del self.app   
+
+        logger.info(f'Closed Application with following reason: {reason}')
+
+class json_data_process():
+
+    def __init__(self) -> None:
+
+        self.last_check_time = time.time()
+        self.new_files = list
+
+    def run_periodically(self, interval, func, *args):
+        def wrapper():
+            while not stop_event.is_set():
+                func(*args)
+                time.sleep(interval)
+        
+        stop_event = threading.Event()
+        thread = threading.Thread(target=wrapper)
+        thread.start()
+        return stop_event
+
+    def get_latest_files(self, folder_path) -> list:
+
+        files = os.listdir(folder_path)
+        current_time = time.time()
+        new_files = []
+
+        for file_name in files:
+            file_path = os.path.join(folder_path, file_name)
+            if os.path.isfile(file_path):
+                # Get the last modification time of the file
+                file_mod_time = os.path.getmtime(file_path)
+                # Check if the file was modified after the last check time
+                if file_mod_time > self.last_check_time:
+                    new_files.append(file_name)
+
+        self.last_check_time = current_time
+        self.new_files = new_files
+
+        logger.info('Checked for new Data')
+        print(new_files)
+        
+        return 
+
+    def read_JSON_Data(self, file, topic, parameter=None):
+
+        with open(file) as config:                  #Übergebene JSON File öffnen
+            config_data = json.load(config)         #Daten auslesen
+
+        data_type = type(config_data)
+
+        if data_type == dict:
+
+            data_type = type(config_data[topic])
+
+            if data_type == dict:
+
+                data = config_data[topic]
+
+                return data[parameter]                #gesuchten parameter zurückgeben
+            
+            elif data_type == list:
+
+                return config_data[topic]
 
 # def fill_Word_report(report_json):
 
@@ -226,8 +297,18 @@ class create_report():
 if __name__ == '__main__':
 
     word_process = create_report()
+    json_process = json_data_process()
     init_logger()
     # print(word_process.check_filename('Report_JM.docx')) 
-    file = word_process.check_filename('Test.docx')
-    word_process.open_word_document(file)
-    print(word_process.get_bookmarks())
+    # file = word_process.check_filename('Test.docx')
+    # word_process.open_word_document(file)
+    # print(word_process.get_bookmarks())
+    # word_process.close_application('Test finished')
+
+    path_to_test_data = json_process.read_JSON_Data('config.json', 'Config_Program', 'Path_to_data')
+    interval = json_process.read_JSON_Data('config.json', 'Config_Program', 'Refresh_rate')
+    repeated_event = json_process.run_periodically(interval, json_process.get_latest_files, path_to_test_data)
+
+    while True:
+        
+        pass

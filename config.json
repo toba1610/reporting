@@ -2,6 +2,8 @@
     "Config_Program":
       {
         "Open_Office_Path": "D:\\LibreOffice\\program\\swriter.exe",
+        "Path_to_data": ".\\Test_Data",
+        "Refresh_rate": 1,
         "Test_File": "Report_JM.docx"
       }
   }
