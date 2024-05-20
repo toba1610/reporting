@@ -42,6 +42,7 @@ def check_filename(filename:str) -> str:
 
     if len(temp) >2 :
         logger.warning(f'The filename contains multiple "." Characters, check config.json for possible errors')
+        return 'error'
 
     return temp[0]
 
