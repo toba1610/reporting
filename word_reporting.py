@@ -63,33 +63,42 @@ class create_report():
 
         return filename
 
-def open_word_document(self, filename: str) -> None:
+    def open_word_document(self, filename: str) -> None:
 
-    '''
-    Function to connet to word and open the application in the background
+        '''
+        Function to connet to word and open the application in the background
 
-    Input:
-        - filename: str = The name of the template to use
+        Input:
+            - filename: str = The name of the template to use
 
-    Output:
-        - None 
-    '''
+        Output:
+            - None 
+        '''
 
-    logger.info('Started generating new protocol')
+        logger.info('Started generating new protocol')
 
-    try:
+        try:
 
-        path = os.path.abspath(f".\\templates\\{filename}")
+            path = os.path.abspath(f".\\templates\\{filename}")
 
-        self.app = win32com.client.Dispatch("Word.Application") 
-        self.app.Visible = False
+            self.app = win32com.client.Dispatch("Word.Application") 
+            self.app.Visible = False
 
-        self.doc = self.app.Documents.Open(path)
+            self.doc = self.app.Documents.Open(path)
 
-    except Exception as e:
+        except Exception as e:
 
-        logger.error(f'Could not open Word-Application with the given error: "{e}"')
+            logger.error(f'Could not open Word-Application with the given error: "{e}"')
 
+    def get_bookmarks(self) -> list:
+        
+        bookmarks = []
+
+        # Loop through the bookmarks collection
+        for bookmark in self.doc.Bookmarks:
+            bookmarks.append(bookmark.Name)
+        
+        return bookmarks
 
 # def fill_Word_report(report_json):
 
@@ -218,4 +227,7 @@ if __name__ == '__main__':
 
     word_process = create_report()
     init_logger()
-    print(word_process.check_filename('Report_JM.docx')) 
+    # print(word_process.check_filename('Report_JM.docx')) 
+    file = word_process.check_filename('Test.docx')
+    word_process.open_word_document(file)
+    print(word_process.get_bookmarks())
