@@ -1,6 +1,7 @@
 {
     "Config_Program":
       {
-        "Open_Office_Path": "D:\\LibreOffice\\program\\swriter.exe"
+        "Open_Office_Path": "D:\\LibreOffice\\program\\swriter.exe",
+        "Test_File": "Report_JM.docx"
       }
   }
