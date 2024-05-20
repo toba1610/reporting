@@ -20,6 +20,7 @@ def check_filename(filename:str) -> str:
     Checks the given filename for the following parameters:
         - length
         - file ending
+        - file existing
 
     Outputs a 'error' if anything is wrong
         
@@ -44,7 +45,14 @@ def check_filename(filename:str) -> str:
         logger.warning(f'The filename contains multiple "." Characters, check config.json for possible errors')
         return 'error'
 
-    return temp[0]
+    if os.path.exists(f'\\templates\\{filename}'):
+        pass
+    else:
+        logger.warning(f"The file doesn't exists, check config.json for possible errors")
+        return 'error'
+
+
+    return filename
 
 def open_word_document(filename: str) -> None:
 
