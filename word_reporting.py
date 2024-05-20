@@ -60,12 +60,18 @@ def open_word_document(filename: str) -> None:
 
     logger.info('Started generating new protocol')
 
-    path = os.path.abspath(f".\\Reports\\{filename}.docx")
+    try:
 
-    app = win32com.client.Dispatch("Word.Application") 
-    app.Visible = False
+        path = os.path.abspath(f".\\Reports\\{filename}.docx")
 
-    doc = app.Documents.Open(path)
+        app = win32com.client.Dispatch("Word.Application") 
+        app.Visible = False
+
+        doc = app.Documents.Open(path)
+
+    except Exception as e:
+
+        logger.error(f'Could not open Word-Application with the given error: "{e}"')
 
 def fill_Word_report(report_json):
 
