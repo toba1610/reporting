@@ -34,10 +34,10 @@ def check_filename(filename:str) -> str:
         temp = []
         temp = filename.split('.')
 
-    if '.docx' in temp:
+    if 'docx' in temp or 'doc' in temp:
         pass
     else:
-        logger.warning(f'The filename contains no *.docx file, check config.json for possible errors')
+        logger.warning(f'The filename contains no *.docx or *.doc file, check config.json for possible errors')
         return 'error'
 
     if len(temp) >2 :
